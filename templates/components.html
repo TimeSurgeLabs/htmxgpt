@@ -1,0 +1,61 @@
+{% macro conversation(convo_id, created_at, title="Default Title") %}
+<div
+    id="convo-{{convo_id}}"
+    class="flex w-full rounded-lg px-3 py-2 text-left transition-colors duration-200 hover:bg-slate-200 dark:hover:bg-slate-800">
+    <!-- Link that occupies the remaining space -->
+    <a href="/conversation/{{convo_id}}" class="flex-grow flex flex-col gap-y-2 focus:outline-none">
+        <h1 id="convo-{{convo_id}}-title" class="text-sm font-medium capitalize text-slate-700 dark:text-slate-200">
+            {{title}}
+        </h1>
+        <p class="text-xs text-slate-500 dark:text-slate-400">{{created_at}}</p>
+    </a>
+
+    <!-- Delete button that takes only as much space as it needs -->
+    <button class="self-start ml-2 bg-transparent border-none dark:text-white" style="opacity: 0.7;" hx-delete="/conversation/{{convo_id}}" hx-target="#convo-{{convo_id}}" hx-swap="outerHTML">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash-filled w-6 h-6 m-2" width="24" height="24"
+            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path
+                d="M20 6a1 1 0 0 1 .117 1.993l-.117 .007h-.081l-.919 11a3 3 0 0 1 -2.824 2.995l-.176 .005h-8c-1.598 0 -2.904 -1.249 -2.992 -2.75l-.005 -.167l-.923 -11.083h-.08a1 1 0 0 1 -.117 -1.993l.117 -.007h16z"
+                stroke-width="0" fill="currentColor"></path>
+            <path
+                d="M14 2a2 2 0 0 1 2 2a1 1 0 0 1 -1.993 .117l-.007 -.117h-4l-.007 .117a1 1 0 0 1 -1.993 -.117a2 2 0 0 1 1.85 -1.995l.15 -.005h4z"
+                stroke-width="0" fill="currentColor"></path>
+        </svg>
+    </button>
+</div>
+{% endmacro %}
+
+{% macro message(role, content) %}
+{% if role == "user" %}
+<div class="flex flex-row px-4 py-8 sm:px-6">
+    <img class="mr-2 flex h-8 w-8 rounded-full sm:mr-4" src="https://dummyimage.com/256x256/363536/ffffff&text=H" />
+
+    <div class="flex max-w-fit items-center mr-2 sm:mr-4">
+        <p>{{content|safe}}</p>
+    </div>
+</div>
+{% elif role == "assistant" %}
+<div class="flex bg-slate-100 px-4 py-8 dark:bg-slate-900 sm:px-6">
+    <img class="mr-2 flex h-8 w-8 rounded-full sm:mr-4" src="https://dummyimage.com/256x256/354ea1/ffffff&text=U" />
+
+    <div class="flex w-full flex-col items-start lg:justify-between">
+        <p class="max-w-fit mr-2 sm:mr-4 flex flex-col">
+           {{content|safe}}
+        </p>
+        <div class="mt-4 flex flex-row justify-start gap-x-2 text-slate-500 lg:mt-0">
+            <button class="hover:text-blue-600" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z">
+                    </path>
+                    <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endmacro %}

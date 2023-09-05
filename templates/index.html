@@ -1,0 +1,19 @@
+<!-- home.html -->
+{% extends "layout.html" %}
+
+{% import 'components.html' as components %}
+
+{% block title %} HTMXGPT | {{title}} {% endblock %}
+ 
+{% block messages %}
+{{components.message("assistant", "Hello! I am HTMXGPT. How may I assist you today?")}}
+{% for message in messages %}
+    {{ components.message(message.role, message.content) }}
+{% endfor %}
+{% endblock %}
+
+{% block history %}
+{% for convo in convos %}
+    {{ components.conversation(convo.id, convo.created_at, convo.title) }}
+{% endfor %}
+{% endblock %}
