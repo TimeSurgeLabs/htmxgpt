@@ -34,7 +34,7 @@ class Message(SQLModel, table=True):
             'role': self.role,
             # TODO fix later
             # this was written in 2023, comment what year it was when you found this
-            'content': markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>')
+            'content': markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>').replace('<ol>','<ol class="list-disc">')
         }
 
     @classmethod
