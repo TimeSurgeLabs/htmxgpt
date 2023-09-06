@@ -158,6 +158,13 @@ async def get_message(convo_id: int):
         message = session.get(Message, convo_id)
         return message
 
+@app.get("/favicon.ico")
+async def favicon():
+    return RedirectResponse(url='/static/favicon.ico', status_code=302)
+
+@app.get("/site.webmanifest")
+async def manifest():
+    return RedirectResponse(url='/static/site.webmanifest', status_code=302)
 
 if __name__ == "__main__":
     import uvicorn
