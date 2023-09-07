@@ -6,9 +6,9 @@
 {% block title %} HTMXGPT | {{title}} {% endblock %}
  
 {% block messages %}
-{{components.message("assistant", "Hello! I am HTMXGPT. How may I assist you today?")}}
+{{components.message("assistant", "Hello! I am HTMXGPT. How may I assist you today?", "0")}}
 {% for message in messages %}
-    {{ components.message(message.role, message.content) }}
+    {{ components.message(message.role, message.content, message.id) }}
 {% endfor %}
 {% endblock %}
 

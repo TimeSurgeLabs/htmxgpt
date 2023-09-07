@@ -1,5 +1,5 @@
 {% import 'components.html' as components %}
 
 {% for message in messages %}
-{{ components.message(message.role, message.content) }}
+{{ components.message(message.role, message.content, message.id) }}
 {% endfor %}

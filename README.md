@@ -16,11 +16,11 @@ ChatGPT clone in htmx, Python, and SQLite
 * ~~Minimize the amount of JavaScript used~~ NO JAVASCRIPT. Use [Hyperscript](https://hyperscript.org/).
 
 # To Do
-* [Disable button and input](https://hyperscript.org/cookbook/#40-disable-btn-during-request) when waiting for response from API
-* prevent HTML from being rendered if returned by the LLM
-* Add loading display when waiting for response from API
-* Add ability to use multiple LLMs
-* Dockerize the application
+- [x] [Disable button and input](https://hyperscript.org/cookbook/#40-disable-btn-during-request) when waiting for response from API
+- [ ] prevent HTML from being rendered if returned by the LLM
+- [x] Add loading display when waiting for response from API
+- [ ] Add ability to use multiple LLMs
+- [ ] Dockerize the application
 
 # Possible Future Goals
 * User accounts & authentication

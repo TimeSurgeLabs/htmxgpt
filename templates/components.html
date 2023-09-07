@@ -27,7 +27,7 @@
 </div>
 {% endmacro %}
 
-{% macro message(role, content) %}
+{% macro message(role, content, message_id) %}
 {% if role == "user" %}
 <div class="flex flex-row px-4 py-8 sm:px-6">
     <img class="mr-2 flex h-8 w-8 rounded-full sm:mr-4" src="https://dummyimage.com/256x256/363536/ffffff&text=H" />
@@ -42,12 +42,12 @@
 
     <div class="flex w-full items-start lg:justify-between">
         <div class="flex flex-col w-full h-full">
-            <p class="max-w-fit mr-2 sm:mr-4 flex flex-col">
+            <p class="max-w-fit mr-2 sm:mr-4 flex flex-col" id="message-{{message_id}}">
                 {{content|safe}}
             </p>
         </div>
         <div class="mt-4 flex flex-row justify-start gap-x-2 text-slate-500 lg:mt-0">
-            <button class="hover:text-blue-600" type="button">
+            <button class="hover:text-blue-600" type="button" _="on click copyText(#message-{{message_id}}.innerText) end">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
