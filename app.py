@@ -140,7 +140,7 @@ async def send_form(request: Request, convo_id: int, prompt: Annotated[str, Form
         session.refresh(new_message)
         # return the last message sent and the new message
         # as HTML
-        return templates.TemplateResponse("form_response.html", {"request": request, "messages": [message.to_html(), new_message.to_html()]})
+        return templates.TemplateResponse("form_response.html", {"request": request, "messages": [new_message.to_html()]})
 
 
 @app.post('/message')

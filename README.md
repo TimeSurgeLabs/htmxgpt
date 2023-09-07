@@ -17,7 +17,9 @@ ChatGPT clone in htmx, Python, and SQLite
 
 # To Do
 * [Disable button and input](https://hyperscript.org/cookbook/#40-disable-btn-during-request) when waiting for response from API
+* prevent HTML from being rendered if returned by the LLM
 * Add loading display when waiting for response from API
+* Add ability to use multiple LLMs
 * Dockerize the application
 
 # Possible Future Goals
