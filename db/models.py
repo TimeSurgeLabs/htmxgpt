@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field, Relationship
 
 from ai import MODEL_TOKEN_LIMIT
 from ai.tokens import token_count_single_message
-from utils.regexp import replace_code_blocks
+from utils.regexp import replace_code_blocks, escape_lt_gt_inside_code_tags
 
 
 class Message(SQLModel, table=True):
@@ -34,7 +34,7 @@ class Message(SQLModel, table=True):
             'role': self.role,
             # TODO fix later
             # this was written in 2023, comment what year it was when you found this
-            'content': markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>').replace('<ol>','<ol class="list-disc">'),
+            'content': escape_lt_gt_inside_code_tags(markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>').replace('<ol>','<ol class="list-disc">')),
             'id': self.id,
         }
 
