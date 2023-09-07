@@ -40,10 +40,12 @@
 <div class="flex bg-slate-100 px-4 py-8 dark:bg-slate-900 sm:px-6">
     <img class="mr-2 flex h-8 w-8 rounded-full sm:mr-4" src="/static/android-chrome-512x512.png" />
 
-    <div class="flex w-full flex-col items-start lg:justify-between">
-        <p class="max-w-fit mr-2 sm:mr-4 flex flex-col">
-           {{content|safe}}
-        </p>
+    <div class="flex w-full items-start lg:justify-between">
+        <div class="flex flex-col w-full h-full">
+            <p class="max-w-fit mr-2 sm:mr-4 flex flex-col">
+                {{content|safe}}
+            </p>
+        </div>
         <div class="mt-4 flex flex-row justify-start gap-x-2 text-slate-500 lg:mt-0">
             <button class="hover:text-blue-600" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2"
