@@ -17,7 +17,7 @@ MODEL = 'gpt-3.5-turbo'
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-engine = new_engine()
+engine = new_engine(os.getenv('DB_URI', 'sqlite:///htmx.gpt'))
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
