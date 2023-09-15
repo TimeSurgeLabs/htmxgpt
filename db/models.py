@@ -2,7 +2,7 @@ from typing import Optional, List
 from datetime import datetime
 
 from markdown import markdown
-from sqlmodel import SQLModel, Field, Relationship
+from sqlmodel import SQLModel, Field, Relationship, Column, JSON
 
 from ai import MODEL_TOKEN_LIMIT
 from ai.tokens import token_count_single_message
@@ -34,7 +34,7 @@ class Message(SQLModel, table=True):
             'role': self.role,
             # TODO fix later
             # this was written in 2023, comment what year it was when you found this
-            'content': escape_lt_gt_inside_code_tags(markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>').replace('<ol>','<ol class="list-disc">')),
+            'content': escape_lt_gt_inside_code_tags(markdown(replace_code_blocks(self.content)).replace('</p>', '</p><br/>').replace('<ol>', '<ol class="list-disc">')),
             'id': self.id,
         }
 
@@ -46,12 +46,42 @@ class Message(SQLModel, table=True):
         )
 
 
+class PartialFile(SQLModel, table=True):
+    __tablename__ = "partial_files"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    content: str
+    file_upload_id: Optional[int] = Field(
+        default=None, foreign_key="file_uploads.id")
+    embeddings: Optional[List[float]] = Field(
+        default=None, sa_column=Column(JSON))
+    file_uploads: Optional["FileUpload"] = Relationship(
+        back_populates="parts")
+
+
+class FileUpload(SQLModel, table=True):
+    __tablename__ = "file_uploads"
+    id: Optional[int] = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    filename: str
+    parts: Optional[List[PartialFile]] = Relationship(
+        back_populates="file_uploads")
+    conversation_id: Optional[int] = Field(
+        default=None, foreign_key="conversations.id")
+    conversations: Optional["Conversation"] = Relationship(
+        back_populates="file_uploads")
+
+
 class Conversation(SQLModel, table=True):
     __tablename__ = "conversations"
     id: Optional[int] = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     title: str = Field(default="New Chat")
+    file_uploads: Optional[List[FileUpload]] = Relationship(
+        back_populates="conversations")
     messages: Optional[List[Message]] = Relationship(
         back_populates="conversations")
 

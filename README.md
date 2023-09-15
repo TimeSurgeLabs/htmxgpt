@@ -8,6 +8,7 @@ ChatGPT clone in htmx, Python, and SQLite
 * Python
 * ChatGPT API
 * SQLite
+
 # Goal
 * Create a ChatGPT like chat interface using HTMX and Tailwind
 * Use Python to interact with the ChatGPT API
@@ -21,6 +22,7 @@ ChatGPT clone in htmx, Python, and SQLite
 - [x] Add loading display when waiting for response from API
 - [ ] Add ability to use multiple LLMs
 - [ ] Dockerize the application
+- [ ] File uploads for conversations
 
 # Possible Future Goals
 * User accounts & authentication

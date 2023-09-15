@@ -1,6 +1,6 @@
 from sqlmodel import create_engine, SQLModel
 
-from db.models import Message, Conversation
+from db.models import Message, Conversation, FileUpload, PartialFile
 
 
 def new_engine(uri: str = "sqlite:///htmxgpt.db"):

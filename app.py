@@ -2,22 +2,24 @@ import os
 from typing import Annotated
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, File
 from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlmodel import Session, select
 import openai
 
-from db import new_engine, Message, Conversation
+from ai.split import split_file_by_tokens
+from db import new_engine, Message, Conversation, FileUpload, PartialFile
 
 load_dotenv()
 
 MODEL = 'gpt-3.5-turbo'
+MAX_TOKEN_CHUNK = 512 # this should be changed depending on model
 
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-engine = new_engine(os.getenv('DB_URI', 'sqlite:///htmx.gpt'))
+engine = new_engine(os.getenv('DB_URI', 'sqlite:///htmxgpt.db'))
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -142,6 +144,38 @@ async def send_form(request: Request, convo_id: int, prompt: Annotated[str, Form
         # as HTML
         return templates.TemplateResponse("form_response.html", {"request": request, "messages": [new_message.to_html()]})
 
+@app.post('/conversation/{convo_id}/upload')
+async def upload_file(convo_id: int, file: Annotated[bytes, File()]):
+    # if the file is not utf-8 encoded, return an error
+    try:
+        file = file.decode('utf-8')
+    except UnicodeDecodeError:
+        return Response(status_code=400, content="File must be UTF-8 encoded", media_type="text/plain")
+    
+    # split the file into chunks
+    file_parts = split_file_by_tokens(file, MAX_TOKEN_CHUNK)
+    with Session(engine) as session:
+        file_upload = FileUpload(filename="test", conversation_id=convo_id)
+        session.add(file_upload)
+        session.commit()
+        session.refresh(file_upload)
+        for part in file_parts:
+            embedding_resp = openai.Embedding.create(
+                model="text-embedding-ada-002",
+                input=part
+            )
+            data = embedding_resp['data'][0]
+            embedding = data['embedding']
+            partial_file = PartialFile(content=part, file_upload_id=file_upload.id, embeddings=embedding)
+            session.add(partial_file)
+        session.commit()
+        session.refresh(file_upload)
+        return {
+            'file_upload_id': file_upload.id,
+            'filename': file_upload.filename,
+            'parts': file_upload.parts
+        }
+    
 
 @app.post('/message')
 async def create_message(message: Message):
@@ -158,9 +192,11 @@ async def get_message(convo_id: int):
         message = session.get(Message, convo_id)
         return message
 
+
 @app.get("/favicon.ico")
 async def favicon():
     return RedirectResponse(url='/static/favicon.ico', status_code=302)
+
 
 @app.get("/site.webmanifest")
 async def manifest():
