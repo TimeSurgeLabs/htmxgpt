@@ -20,7 +20,7 @@ jobs:
               username: ${{github.actor}}
               password: ${{secrets.GITHUB_TOKEN}}
 
-          - name: 'Build Inventory Image'
+          - name: 'Build Image'
             run: |
               docker build . --tag ghcr.io/timesurgelabs/htmxgpt:latest
               docker push ghcr.io/timesurgelabs/htmxgpt:latest
